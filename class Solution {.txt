@@ -1,0 +1,28 @@
+class Solution {
+    public int trap(int[] height) {
+        Stack<Integer> st = new Stack<>();
+        int area = 0;
+        
+        int n = height.length;
+        int s = 0;
+
+        for(int i=0;i<n-1;i++){
+            int count = 0;
+            for(int j=i+1;j<n;j++){
+                if(height[j]<=height[i]){
+                    area = area + count;
+                    break;
+                }
+
+                else if(height[j]>height[i]){
+                    count = count + Math.abs(height[j] - height[i]);
+
+                }
+
+                
+            }
+        }
+        return area;
+
+    }
+}
