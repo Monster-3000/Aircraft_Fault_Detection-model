@@ -1,7 +1,9 @@
 import os
 from ultralytics import YOLO
 
-model = YOLO("models/best.pt" if os.path.exists("models/best.pt") else "backend/models/best.pt")
+model_path = os.getenv("AIRCRAFT_MODEL_PATH", "models/best.pt" if os.path.exists("models/best.pt") else "backend/models/best.pt")
+model = YOLO(model_path)
+
 
 parts_model_path = "models/parts_model.pt" if os.path.exists("models/parts_model.pt") else "backend/models/parts_model.pt"
 parts_model = YOLO(parts_model_path) if os.path.exists(parts_model_path) else None

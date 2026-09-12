@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from backend.api.routes import router
+from backend.api.routes import router as predict_router
+from backend.api.auth import router as auth_router
 
 app = FastAPI(title="DRISHTI Explainable AI System", version="1.0")
 
@@ -15,7 +16,8 @@ app.add_middleware(
 )
 
 # Include API routes
-app.include_router(router, prefix="/api")
+app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
+app.include_router(predict_router, prefix="/api", tags=["predict"])
 
 # Mount outputs for serving static images to frontend
 app.mount("/static", StaticFiles(directory="outputs"), name="static")

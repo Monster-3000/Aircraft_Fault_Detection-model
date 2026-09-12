@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,20 +11,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <div class="container">
-        <header>
-            <h1>DRISHTI</h1>
-            <p class="subtitle">Aircraft Surface Damage Inspection System</p>
+    <div class="app-container">
+        <header class="top-nav">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div class="logo">DRISHTI XAI</div>
+                <div id="user-info"
+                    style="font-size: 0.9rem; color: var(--text-muted); display: flex; align-items: center; gap: 1rem;">
+                    <span>Welcome, <strong id="current-user" style="color: var(--accent);">User</strong> (<span
+                            id="current-role">Role</span>)</span>
+                    <button id="logout-btn"
+                        style="background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 0.25rem 0.75rem; border-radius: 4px; cursor: pointer; transition: all 0.2s;">Logout</button>
+                </div>
+            </div>
         </header>
 
-        <main>
+        <main class="dashboard">
             <!-- Upload Section -->
             <div class="card" id="upload-card">
                 <div class="upload-area" id="dropzone">
                     <input type="file" id="file-input" accept="image/*">
                     <div class="upload-content">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary); margin-bottom: 1rem;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--primary); margin-bottom: 1rem;">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="17 8 12 3 7 8"></polyline>
                             <line x1="12" y1="3" x2="12" y2="15"></line>
@@ -32,44 +44,16 @@
                         <p style="color: var(--text-muted); font-size: 0.9rem;">Drag & drop or click to select</p>
                     </div>
                 </div>
-                
+
                 <div class="loader" id="loader"></div>
                 <button class="btn" id="analyze-btn" disabled>Analyze</button>
             </div>
 
-            <!-- Results Section -->
-            <div class="results-container" id="results-container">
-                <div class="image-panel card">
-                    <h3 class="image-title">Original Image</h3>
-                    <div class="image-box">
-                        <img id="original-image" alt="Original Upload">
-                    </div>
-                </div>
-                
-                <div class="image-panel card">
-                    <h3 class="image-title">AI Explanation (XAI)</h3>
-                    <div class="image-box">
-                        <img id="xai-image" alt="Explainable AI Heatmap">
-                    </div>
-                </div>
 
-                <div class="data-panel card">
-                    <h3 class="image-title" style="margin-bottom: 1.5rem; text-align: left;">Detection Results</h3>
-                    <div id="defects-list">
-                        <!-- Dynamic content -->
-                    </div>
-                </div>
-
-                <div class="data-panel card" style="grid-column: 1 / -1;">
-                    <h3 class="image-title" style="margin-bottom: 1.5rem; text-align: left;">Detailed XAI Report</h3>
-                    <div id="xai-report-box" style="white-space: pre-wrap; font-family: monospace; background: var(--bg-main); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.9rem;">
-                        No report available.
-                    </div>
-                </div>
-            </div>
         </main>
     </div>
-    
+
     <script src="app.js"></script>
 </body>
+
 </html>

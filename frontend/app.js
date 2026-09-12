@@ -1,13 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // ---- AUTHENTICATION CHECK ----
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login.html';
+        return; // Stop execution
+    }
+
+    // Load user info
+    const username = localStorage.getItem('username');
+    const role = localStorage.getItem('role');
+    const userEl = document.getElementById('current-user');
+    const roleEl = document.getElementById('current-role');
+    if (userEl) userEl.textContent = username;
+    if (roleEl) roleEl.textContent = role;
+
+    // Logout
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+    }
+    // ------------------------------
+
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('file-input');
     const analyzeBtn = document.getElementById('analyze-btn');
     const loader = document.getElementById('loader');
-    const resultsContainer = document.getElementById('results-container');
-    const originalImg = document.getElementById('original-image');
-    const xaiImg = document.getElementById('xai-image');
-    const defectsList = document.getElementById('defects-list');
-    
+
+
     let selectedFile = null;
 
     // Handle Drag and Drop
@@ -23,25 +45,25 @@ document.addEventListener('DOMContentLoaded', () => {
     dropzone.addEventListener('drop', (e) => {
         e.preventDefault();
         dropzone.classList.remove('dragover');
-        if(e.dataTransfer.files.length) {
+        if (e.dataTransfer.files.length) {
             handleFileSelect(e.dataTransfer.files[0]);
         }
     });
 
     // Handle Click upload
     fileInput.addEventListener('change', (e) => {
-        if(e.target.files.length) {
+        if (e.target.files.length) {
             handleFileSelect(e.target.files[0]);
         }
     });
 
     function handleFileSelect(file) {
-        if(!file.type.startsWith('image/')) {
+        if (!file.type.startsWith('image/')) {
             alert('Please select an image file');
             return;
         }
         selectedFile = file;
-        
+
         // Update UI to show selected file
         const content = dropzone.querySelector('.upload-content');
         content.innerHTML = `
@@ -52,18 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <h3 style="margin-bottom: 0.5rem; color: var(--accent);">${file.name}</h3>
             <p style="color: var(--text-muted); font-size: 0.9rem;">Ready to analyze</p>
         `;
-        
+
         analyzeBtn.disabled = false;
-        resultsContainer.classList.remove('active');
     }
 
     analyzeBtn.addEventListener('click', async () => {
-        if(!selectedFile) return;
+        if (!selectedFile) return;
 
         // UI updates during fetch
         analyzeBtn.style.display = 'none';
         loader.style.display = 'block';
-        resultsContainer.classList.remove('active');
+
 
         const formData = new FormData();
         formData.append('file', selectedFile);
@@ -71,18 +92,32 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('/api/predict', {
                 method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}` // Passing token for security
+                },
                 body: formData
             });
 
-            if(!response.ok) {
+            if (!response.ok) {
+                // if unauthorized
+                if (response.status === 401) {
+                    localStorage.clear();
+                    window.location.href = '/login.html';
+                    return;
+                }
                 const err = await response.json();
                 throw new Error(err.detail || 'Analysis failed');
             }
 
             const data = await response.json();
-            displayResults(data);
             
-        } catch(err) {
+            // Save results to session storage for the results page
+            sessionStorage.setItem('predictionResults', JSON.stringify(data));
+            
+            // Redirect to the new results page
+            window.location.href = '/results.html';
+
+        } catch (err) {
             alert(err.message);
         } finally {
             analyzeBtn.style.display = 'block';
@@ -90,76 +125,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function displayResults(data) {
-        // Set images with a timestamp query param to bypass cache
-        const t = new Date().getTime();
-        originalImg.src = `${data.original_image_path}?t=${t}`;
-        xaiImg.src = `${data.explanation_path}?t=${t}`;
-        
-        // Ensure there is an explanation element
-        let expEl = document.getElementById('ai-explanation-text');
-        if(!expEl) {
-            expEl = document.createElement('div');
-            expEl.id = 'ai-explanation-text';
-            expEl.style.marginTop = '1rem';
-            expEl.style.padding = '1rem';
-            expEl.style.background = 'rgba(16, 185, 129, 0.1)';
-            expEl.style.borderLeft = '4px solid var(--accent)';
-            expEl.style.borderRadius = '0 8px 8px 0';
-            expEl.style.color = 'var(--text-main)';
-            // Insert it under the xai-image container
-            xaiImg.parentElement.parentElement.appendChild(expEl);
-        }
-        expEl.textContent = data.explanation;
 
-        // Fetch and display the text report
-        const reportBox = document.getElementById('xai-report-box');
-        if (data.report_path) {
-            reportBox.textContent = "Loading report...";
-            fetch(`${data.report_path}?t=${t}`)
-                .then(res => res.text())
-                .then(text => {
-                    reportBox.textContent = text;
-                })
-                .catch(err => {
-                    reportBox.textContent = "Failed to load the XAI report.";
-                });
-        } else {
-            reportBox.textContent = "No XAI report generated for this image.";
-        }
-
-        // Build defects list
-        defectsList.innerHTML = '';
-        
-        if(data.detections.length === 0) {
-            defectsList.innerHTML = `
-                <div style="text-align: center; color: var(--accent); padding: 2rem;">
-                    <h3>No defects detected</h3>
-                    <p>The surface appears clear.</p>
-                </div>
-            `;
-        } else {
-            data.detections.forEach(d => {
-                const urgencyClass = d.urgency.toLowerCase();
-                const html = `
-                    <div class="defect-item ${urgencyClass}">
-                        <div class="defect-header">
-                            <span class="defect-title">${d.class_name}</span>
-                            <span class="defect-confidence">${Math.round(d.confidence * 100)}%</span>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; font-size: 0.95rem; color: var(--text-muted);">
-                            <div><strong>Severity:</strong> ${d.severity}/100</div>
-                            <div><strong>Urgency:</strong> ${d.urgency}</div>
-                        </div>
-                        <div style="margin-top: 1rem; color: var(--text-main);">
-                            <strong>Recommendation:</strong> ${d.recommendation}
-                        </div>
-                    </div>
-                `;
-                defectsList.insertAdjacentHTML('beforeend', html);
-            });
-        }
-
-        resultsContainer.classList.add('active');
-    }
 });

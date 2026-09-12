@@ -82,14 +82,18 @@ p.subtitle {
   position: relative;
 }
 
-.upload-area:hover, .upload-area.dragover {
+.upload-area:hover,
+.upload-area.dragover {
   border-color: var(--primary);
   background: rgba(59, 130, 246, 0.05);
 }
 
 .upload-area input[type="file"] {
   position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0;
   cursor: pointer;
 }
@@ -147,7 +151,10 @@ p.subtitle {
 
 .image-box img {
   width: 100%;
+  max-height: 500px;
+  object-fit: contain;
   display: block;
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .image-title {
@@ -168,8 +175,13 @@ p.subtitle {
   margin-bottom: 1rem;
 }
 
-.defect-item.high { border-color: var(--danger); }
-.defect-item.medium { border-color: var(--warning); }
+.defect-item.high {
+  border-color: var(--danger);
+}
+
+.defect-item.medium {
+  border-color: var(--warning);
+}
 
 .defect-header {
   display: flex;
@@ -192,17 +204,29 @@ p.subtitle {
 
 /* Animations */
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .loader {
-  border: 3px solid rgba(255,255,255,0.1);
+  border: 3px solid rgba(255, 255, 255, 0.1);
   border-top: 3px solid var(--primary);
   border-radius: 50%;
   width: 24px;
@@ -213,6 +237,25 @@ p.subtitle {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Results Page Specific Styles */
+body.results-page {
+  background-image: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+}
+
+.btn-xai {
+  transition: all 0.3s ease;
+}
+
+.btn-xai:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6) !important;
 }

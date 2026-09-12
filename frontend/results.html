@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRISHTI - Inspection Results</title>
+    <!-- Use Inter font for a modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="results-page">
+    <div class="app-container" style="width: 100%; max-width: 1200px; padding: 2rem;">
+        <header class="top-nav">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div class="logo">DRISHTI XAI</div>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <button onclick="window.location.href='/index.html'"
+                        style="background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
+                        New Upload
+                    </button>
+                    <button id="logout-btn"
+                        style="background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; transition: all 0.2s;">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard">
+            <div class="header-section text-center" style="margin-bottom: 2rem; animation: fadeInDown 0.8s ease-out;">
+                <h1>Inspection Results</h1>
+                <p class="subtitle">Review the detections and generate Explainable AI insights</p>
+            </div>
+
+            <!-- Initial Results Section -->
+            <div class="results-container active" id="results-container" style="display: flex; flex-direction: column; gap: 2rem;">
+                <div class="image-panel card">
+                    <h3 class="image-title">Original Upload & Detections</h3>
+                    <div class="image-box">
+                        <img id="original-image" alt="Original Upload" style="width: 100%;">
+                    </div>
+                </div>
+
+                <div class="data-panel card" style="display: flex; flex-direction: column;">
+                    <h3 class="image-title" style="margin-bottom: 1.5rem; text-align: left;">Detection Results</h3>
+                    <div id="defects-list" style="flex-grow: 1; overflow-y: auto; max-height: 400px; padding-right: 10px;">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generate XAI Trigger -->
+            <div class="xai-trigger-section" style="text-align: center; margin: 3rem 0; animation: fadeIn 1s ease-out;">
+                <button class="btn btn-xai" id="generate-xai-btn" style="padding: 1rem 3rem; font-size: 1.25rem; border-radius: 50px; background: linear-gradient(135deg, #10b981, #3b82f6); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                    <span id="xai-btn-text">Generate Explainable AI Report</span>
+                    <div class="loader" id="xai-loader" style="display: none; border-top-color: white;"></div>
+                </button>
+            </div>
+
+            <!-- XAI Results Section (Hidden initially) -->
+            <div class="xai-results-container" id="xai-results-container" style="display: none; flex-direction: column; gap: 2rem; animation: fadeIn 0.8s ease-out;">
+                <div class="image-panel card" style="border: 1px solid var(--accent);">
+                    <h3 class="image-title" style="color: var(--accent);">AI Explanation (Grad-CAM)</h3>
+                    <div class="image-box">
+                        <img id="xai-image" alt="Explainable AI Heatmap" style="width: 100%;">
+                    </div>
+                    <div id="ai-explanation-text" style="margin-top: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; color: var(--text-main);">
+                        <!-- Dynamic explanation -->
+                    </div>
+                </div>
+
+                <div class="data-panel card" style="border: 1px solid var(--primary);">
+                    <h3 class="image-title" style="margin-bottom: 1.5rem; text-align: left; color: var(--primary);">Detailed XAI Report</h3>
+                    <div id="xai-report-box"
+                        style="white-space: pre-wrap; font-family: monospace; background: var(--bg-main); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.9rem; height: 100%; overflow-y: auto;">
+                        Loading report...
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="results.js"></script>
+</body>
+
+</html>

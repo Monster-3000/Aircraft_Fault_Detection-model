@@ -1,32 +1,38 @@
 def calculate_risk(defect: str) -> dict:
     """
     Returns risk information based on the type of defect detected.
+    Classes:
+      0 = Dent
+      1 = Fastener Damage
+      2 = Rupture
     """
-    if defect == "crack":
+    d = defect.lower() if isinstance(defect, str) else ""
+    if "rupture" in d:
         return {
             "severity": 95,
             "urgency": "High",
             "priority": "#1",
-            "recommendation": "Immediate Inspection"
+            "recommendation": "Immediate Structural Repair / Ground Aircraft (AOG)"
         }
-    elif defect == "dent":
+    elif "fastener" in d:
+        return {
+            "severity": 85,
+            "urgency": "High",
+            "priority": "#1",
+            "recommendation": "Inspect Fastener Integrity & Torque / Replace Fastener"
+        }
+    elif "dent" in d:
         return {
             "severity": 70,
             "urgency": "Medium",
             "priority": "#2",
-            "recommendation": "Schedule Repair"
-        }
-    elif defect == "corrosion":
-        return {
-            "severity": 80,
-            "urgency": "High",
-            "priority": "#1",
-            "recommendation": "Inspect Surface Integrity"
+            "recommendation": "Schedule Surface Repair & Depth Inspection"
         }
     
     return {
-        "severity": 0,
+        "severity": 50,
         "urgency": "Low",
         "priority": "None",
-        "recommendation": "No action required"
+        "recommendation": "Monitor during routine maintenance"
     }
+

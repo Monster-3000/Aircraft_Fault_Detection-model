@@ -1,25 +1,29 @@
 def calculate_risk(defect):
-
-    if defect == "crack":
+    d = str(defect).lower() if defect else ""
+    if "rupture" in d:
         return {
             "severity": 95,
             "urgency": "High",
             "priority": "#1",
-            "recommendation": "Immediate Inspection"
+            "recommendation": "Immediate Structural Repair / Ground Aircraft (AOG)"
         }
-
-    elif defect == "dent":
+    elif "fastener" in d:
+        return {
+            "severity": 85,
+            "urgency": "High",
+            "priority": "#1",
+            "recommendation": "Inspect Fastener Integrity & Torque / Replace Fastener"
+        }
+    elif "dent" in d:
         return {
             "severity": 70,
             "urgency": "Medium",
             "priority": "#2",
-            "recommendation": "Schedule Repair"
+            "recommendation": "Schedule Surface Repair & Depth Inspection"
         }
-
-    elif defect == "corrosion":
-        return {
-            "severity": 80,
-            "urgency": "High",
-            "priority": "#1",
-            "recommendation": "Inspect Surface Integrity"
-        }
+    return {
+        "severity": 50,
+        "urgency": "Low",
+        "priority": "None",
+        "recommendation": "Monitor during routine maintenance"
+    }
