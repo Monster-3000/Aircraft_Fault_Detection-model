@@ -62,7 +62,7 @@ async def predict(file: UploadFile = File(...)):
                 "class_name": d["class"],
                 "confidence": d["confidence"],
                 "bbox": d["bbox"],
-                "location": d.get("location", "Unknown"),
+                "location": d.get("location", "Main Fuselage"),
                 "severity": risk["severity"],
                 "urgency": risk["urgency"],
                 "priority": risk["priority"],
@@ -119,7 +119,7 @@ async def explain(request: ExplainRequest):
             else:
                 specific_exp = f"The AI detected a structural anomaly ({defect['class_name']}) based on learned visual features."
                 
-            # Estimate Aircraft Section from Bounding Box
+            # Use the location detected by the parts model
             import cv2
             img = cv2.imread(upload_path)
             h, w = img.shape[:2] if img is not None else (1000, 1000)
@@ -128,19 +128,7 @@ async def explain(request: ExplainRequest):
             cx = (x1 + x2) / 2
             cy = (y1 + y2) / 2
             
-            guessed_section = "Main Fuselage"
-            if cx < w * 0.25 or cx > w * 0.75:
-                guessed_section = "Wings / Outer Engine / Winglets"
-            elif cx > w * 0.8:
-                guessed_section = "Empennage (Tail Section)"
-            elif cx < w * 0.15:
-                guessed_section = "Nose / Radome / Cockpit"
-            elif cy < h * 0.3:
-                guessed_section = "Upper Fuselage / Crown"
-            elif cy > h * 0.7:
-                guessed_section = "Lower Fuselage / Belly / Landing Gear"
-                
-            defect['location'] = guessed_section
+            guessed_section = defect.get("location", "Main Fuselage")
             
             # Enhancing the text explanation
             anatomy_exp = (

@@ -12,7 +12,7 @@ for image in images:
         print("\nDETECTION")
         print("Class:", defect["class"])
         print("Confidence:", defect["confidence"])
-        print("Location:", defect.get("location", "Unknown"))
+        print("Location:", defect.get("location", "Main Fuselage"))
         print("\nRISK")
         print("Severity:", risk["severity"])
         print("Urgency:", risk["urgency"])

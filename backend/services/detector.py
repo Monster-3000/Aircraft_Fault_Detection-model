@@ -59,7 +59,7 @@ class DetectorService:
                 x1, y1, x2, y2 = box.xyxy[0].tolist()
                 bbox = [round(x1, 2), round(y1, 2), round(x2, 2), round(y2, 2)]
                 
-                location = "Unknown"
+                location = "Main Fuselage"
                 if parts:
                     best_part = None
                     best_score = -1

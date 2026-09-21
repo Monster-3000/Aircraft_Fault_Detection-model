@@ -127,6 +127,8 @@
     </div>
 
     <script>
+        const API_BASE_URL = (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '8000')) ? 'http://127.0.0.1:8000' : '';
+
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const u = document.getElementById('username').value;
@@ -139,7 +141,7 @@
             succ.style.display = 'none';
 
             try {
-                const res = await fetch('/api/auth/register', {
+                const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({username: u, password: p, role: r})

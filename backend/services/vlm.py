@@ -36,3 +36,4 @@ def analyze_aircraft_damage(image_path: str) -> str:
         return response.text.strip()
     except Exception as e:
         return f"VLM Analysis Failed: {str(e)}"
+

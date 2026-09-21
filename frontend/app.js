@@ -1,3 +1,5 @@
+const API_BASE_URL = (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '8000')) ? 'http://127.0.0.1:8000' : '';
+
 document.addEventListener('DOMContentLoaded', () => {
     // ---- AUTHENTICATION CHECK ----
     const token = localStorage.getItem('token');
@@ -90,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formData.append('file', selectedFile);
 
         try {
-            const response = await fetch('/api/predict', {
+            const response = await fetch(`${API_BASE_URL}/api/predict`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}` // Passing token for security

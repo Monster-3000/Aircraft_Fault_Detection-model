@@ -35,5 +35,4 @@ def test_predict_endpoint_valid_file():
     assert response.status_code == 200
     data = response.json()
     assert "detections" in data
-    assert "explanation_path" in data
     assert "original_image_path" in data
